@@ -1,0 +1,88 @@
+body {
+  margin: 0;
+  background: #fafafa;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1000px 1fr;
+  /*grid-template-rows: 54px 1fr 140px;*/
+  grid-template-areas: "left_margin main right_margin";
+  height: 100vh;
+}
+
+.left_margin {
+  grid-area: left_margin;
+  /*background-color: #f5f5f5;*/
+}
+
+.main {
+  grid-area: main;
+}
+
+.right_margin {
+  grid-area: right_margin;
+  /*background-color: #f5f5f5;*/
+}
+
+
+.card {
+  background: #fff;
+  padding: 28px;
+  margin-bottom: 28px;
+  border-radius: 2px;
+  background-clip: padding-box;
+}
+
+.platform_picker {
+  padding: 0;
+  grid-gap: 12px 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  margin-bottom: 25px;
+}
+
+.platform_picker > span {
+  display: block;
+}
+
+.platform_item {
+  width: 100%;
+  min-width: 100%;
+  height: 40px;
+  padding: 8px;
+  border: 1px solid #d2d0ce;
+  font-size: 12px;
+  outline: transparent;
+  position: relative;
+}
+
+.platform_item .ms-Icon {
+  color: #b4b3b1;
+}
+
+.ms-Shimmer-container {
+  margin: 10px 0;
+}
+
+.validation-details-modal .ms-Dialog-main {
+  width: 1200px;
+  height: 700px;
+}
+
+.success .shiny-fluent-ActionButton .ms-Icon {
+  color: #0a0;
+}
+
+.failure .shiny-fluent-ActionButton .ms-Icon {
+  color: #f00;
+}
+
+.warning .shiny-fluent-ActionButton .ms-Icon {
+  color: #FF8C00;
+}
+
+#button_status .ms-Button {
+  border: 1px solid #DC143C;
+  background-color: #DC143C;
+}
