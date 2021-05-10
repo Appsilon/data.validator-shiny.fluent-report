@@ -5,6 +5,8 @@ generated from [data.validator](https://github.com/Appsilon/data.validator) pack
 time it is a test run for our [shiny.fluent](https://github.com/Appsilon/shiny.fluent) package,
 which allows building Shiny apps with React.js components, without need for JS programming.
 
+You can view the application here: https://pawelp.shinyapps.io/data-validator-report
+
 ![Data validation report](./images/app-recording.gif)
 
 ## Story behind the app
@@ -29,6 +31,8 @@ I used [shiny.fluent](https://github.com/Appsilon/shiny.fluent) package to build
 
 * proves how easy it is to use React.js components within Shiny
 * has business looking UI thanks to the [Microsoft Fluent UI](https://developer.microsoft.com/en-us/fluentui) components
+
+**Note:** this POC app is a hypothetical report generated after running [data_validation.R](./data_validation.R) code.
 
 ## About data.validator
 
