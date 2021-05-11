@@ -7,55 +7,48 @@ library(DT)
 library(codeModules)
 library(shiny.info)
 
+# Load functions responsible for different ways of displaying errors in data
 source("viewers.R")
 
-validation_code <- read_file("data_validation.R")
+# Run data validation
+# source("data_validation.R")
 
-# TODO
-# - refaktoring kodu aby wyglądał elegancko
-# - poprawić działanie walidacji na mapie + prawdziwe uruchomienie walidatora przy inicjalizacji appki
-# - deploy na shinyapps
-
-makeCard <- function(title, content) {
+Card <- function(title, content) {
   div(class = "card ms-depth-8",
-      Stack(
-        tokens = list(childrenGap = 5),
-        Text(variant = "large", title, block = TRUE),
-        content
-      ))
+    Stack(
+      tokens = list(childrenGap = 5),
+      Text(variant = "large", title, block = TRUE),
+      content
+    )
+  )
 }
 
-validation_row <- function(id, text, success = TRUE, warning = FALSE) {
-  if (success) {
-    div(class="success",
-      tagList(
-        Separator(),
-        ActionButton(paste0("validation_", id), iconProps = list("iconName" = "CheckMark"), text = text)
+ValidationStatusRow <- function(id, text, success = TRUE, warning = FALSE) {
+  config <- list(
+    success = list(class = "success", icon = "CheckMark"),
+    warning = list(class = "warning", icon = "Warning12"),
+    failure = list(class = "failure", icon = "Cancel")
+  )
+  
+  params <- if (success) config$success else if (warning) config$warning else config$failure
+  
+  div(class = params$class,
+    tagList(
+      Separator(),
+      div(
+        ActionButton(
+          paste0("validation_", id), 
+          iconProps = list("iconName" = params$icon), 
+          text = text
+        ),
+        if (success) NULL else div(style = "float: right", DefaultButton(
+          paste0("inspect_", id),
+          iconProps = list("iconName" = "Search"),
+          text = "Inspect invalid data"
+        ))
       )
     )
-  } else if (warning) {
-    div(class="warning",
-      tagList(
-        Separator(),
-        div(
-          ActionButton(paste0("validation_", id), iconProps = list("iconName" = "Warning12"), text = text),
-          span(style="float: right",
-               DefaultButton(paste0("inspect_", id), iconProps = list("iconName" = "Search"), text = "Inspect invalid data"))
-        )
-      )
-    )
-  } else {
-    div(class="failure",
-        tagList(
-          Separator(),
-          div(
-            ActionButton(paste0("validation_", id), iconProps = list("iconName" = "Cancel"), text = text),
-            span(style="float: right",
-                 DefaultButton(paste0("inspect_", id), iconProps = list("iconName" = "Search"), text = "Inspect invalid data"))
-          )
-        )
-    )
-  }
+  )
 }
 
 
@@ -77,96 +70,90 @@ mocked_validation_results <- list(
 )
 
 
-layout <- div(class = "grid-container",
-  div(class = "left_margin", ""),
-  div(class = "main",
-    tagList(
-      shiny.info::display("Built for RStudio Shiny Contest 2021", position = "bottom right"),
-      div(style = "margin: 20px 0",
-        Text(variant = "xLarge", "Data Validation Report")
+layout <- function(body) {
+  div(class = "grid-container",
+    div(class = "left_margin", ""),
+    div(class = "main", body),
+    div(class = "right_margin", "")
+  )
+}
+
+report <- tagList(
+  shiny.info::display("Built for RStudio Shiny Contest 2021", position = "bottom right"),
+  div(style = "margin: 20px 0", Text(variant = "xLarge", "Data Validation Report")),
+  div(style = "margin: 20px 0",
+      span(style = "float: left; margin-right: 20px;",
+        PrimaryButton("report_status", iconProps = list("iconName" = "Cancel"), text = "Failed")
       ),
-      div(style = "margin: 20px 0",
-          span(style="float: left; margin-right: 20px;", PrimaryButton("button_status", iconProps = list("iconName" = "Cancel"), text = "Failed")),
-          span(style="float: left; padding-top: 5px; margin-right: 5px", Toggle("toggle", FALSE, onChanged = JS("(checked) => checked ? $('.success').fadeOut(1000) : $('.success').fadeIn(1000)"))),
-          span(style="float: left; padding-top: 5px", Text(variant = "medium", "Display errors and warnings only")),
-          span(style="float: right",
-               TooltipHost(
-                 content = "Date when validation was performed",
-                 delay = 0,
-                 tagList(
-                   FontIcon(iconName = "Clock"),
-                   Text(" 2021-04-17 21:47:11 CET ")
-                 )
-               )
-          )
+      span(style = "float: left; padding-top: 5px; margin-right: 5px", 
+        Toggle("toggle", FALSE, 
+               onChanged = JS("(checked) => checked ? $('.success').fadeOut(1000) : $('.success').fadeIn(1000)"))
       ),
-      br(), br(),
-      MessageBar(
-        span(
-          "This is a proof of concept of",
-          Link(href = "https://github.com/Appsilon/data.validator", "data.validator"),
-          " report using",
-          Link(href = "https://github.com/Appsilon/shiny.fluent", "shiny.fluent"),
-          " React.js components from",
-          Link(href = "https://developer.microsoft.com/en-us/fluentui/", "Microsoft Fluent UI"),
-          " library")
-      ),
-      br(),
-      Pivot(
-        PivotItem(headerText = "Validation Results",
-          ShinyComponentWrapper(
+      span(style = "float: left; padding-top: 5px",
+        Text(variant = "medium", "Display errors and warnings only")
+      ), 
+      span(style="float: right",
+        TooltipHost(content = "Date when validation was performed", delay = 0, 
+                    tagList(FontIcon(iconName = "Clock"), Text(" 2021-04-17 21:47:11 CET ")))
+      )
+  ),
+  br(), br(),
+  MessageBar(
+    span(
+      "This is a proof of concept of",
+      Link(href = "https://github.com/Appsilon/data.validator", "data.validator"),
+      " report using",
+      Link(href = "https://github.com/Appsilon/shiny.fluent", "shiny.fluent"),
+      " React.js components from",
+      Link(href = "https://developer.microsoft.com/en-us/fluentui/", "Microsoft Fluent UI"),
+      " library")
+  ),
+  br(),
+  Pivot(
+    PivotItem(headerText = "Validation Results",
+      ShinyComponentWrapper(
+        tagList(
+          Separator(),
+          Card("mtcars",
             tagList(
-              Separator(),
-              makeCard("mtcars",
-                 tagList(
-                   Text(variant = "medium", "Motor Trend Car Road Tests"),
-                   lapply(1:11, function(id) {
-                     result <- mocked_validation_results[[id]]
-                     validation_row(id, result$title, success = result$success, warning = result$warning)
-                   })
-                 )
-              ),
-              makeCard("iris",
-                 tagList(
-                   Text(variant = "medium", "Verifying flower dataset"),
-                   lapply(12:13, function(id) {
-                     result <- mocked_validation_results[[id]]
-                     validation_row(id, result$title, success = result$success, warning = result$warning)
-                   })
-                 )
-              ),
-              makeCard("population",
-                 tagList(
-                   Text(variant = "medium", "We can visualize validation in different ways. Below you can see example with a leaflet map. Also validation can be just a warning, to notify you about potential problems. It doesn't have to fail the whole report status."),
-                   lapply(14:14, function(id) {
-                     result <- mocked_validation_results[[id]]
-                     validation_row(id, result$title, success = result$success, warning = result$warning)
-                   })
-                 )
-              )
+              Text(variant = "medium", "Motor Trend Car Road Tests"),
+              lapply(1:11, function(id) {
+                result <- mocked_validation_results[[id]]
+                ValidationStatusRow(id, result$title, success = result$success, warning = result$warning)
+              })
             )
-          )
-        ),
-        PivotItem(headerText = "Code",
-          ShinyComponentWrapper(
+          ),
+          Card("iris",
             tagList(
-              Separator(),
-              makeCard("Code used to validate the data and generate this report",
-                tagList(
-                  br(),
-                  uiOutput("code")
-                  # Być może też renderCode zadziała jak to będzie naprawione
-                  # https://statistikat.github.io/codeModules/reference/renderCode.html#examples
-                )
-              )
+              Text(variant = "medium", "Verifying flower dataset"),
+              lapply(12:13, function(id) {
+                result <- mocked_validation_results[[id]]
+                ValidationStatusRow(id, result$title, success = result$success, warning = result$warning)
+              })
+            )
+          ),
+          Card("population",
+            tagList(
+              Text(variant = "medium", "We can visualize validation in different ways. Below you can see example with a leaflet map. Also validation can be just a warning, to notify you about potential problems. It doesn't have to fail the whole report status."),
+              lapply(14:14, function(id) {
+                result <- mocked_validation_results[[id]]
+                ValidationStatusRow(id, result$title, success = result$success, warning = result$warning)
+              })
             )
           )
         )
       )
     ),
-    reactOutput("reactModal")
+    PivotItem(headerText = "Code",
+      ShinyComponentWrapper(
+        tagList(
+          Separator(),
+          Card("Code used to validate the data and generate this report", uiOutput("code"))
+        )
+      )
+    )
   ),
-  div(class = "right_margin", "")
+  reactOutput("reactModal")
 )
 
 ui <- fluidPage(
@@ -183,14 +170,19 @@ ui <- fluidPage(
   shiny::tags$body(
     class = "ms-Fabric",
     dir="ltr",
-    withReact(layout)
+    withReact(
+      layout(
+        report
+      )
+    )
   )
 )
 
 server <- function(input, output, session) {
 
+  # Set observers for inspect button click to open 
+  # validation viewer modal with appropriate validation
   inspected_validation <- reactiveVal(NULL)
-
   lapply(
     X = 1:14,
     FUN = function(i) {
@@ -202,16 +194,16 @@ server <- function(input, output, session) {
     }
   )
   
-  # https://statistikat.github.io/codeModules/reference/renderCode.html
-  output$code_out <- renderCode({
-    validation_code
+  output$code_out <- renderCode({ # from codeModules
+    read_file("data_validation.R")
   })
   
-  # renderUI is a hack
-  # we are not handling HTML() directly, because to add raw HTML in React you have to use __dangerouslySetInnerHTML__
-  # it will be fixed in the next versions of shiny.fluent
+  # NOTE: renderUI used here is a hack
+  # We can't support some outputs in shiny.fluent, e.g. HTML() directly, 
+  # because to add raw HTML in React you have to use __dangerouslySetInnerHTML__
+  # which is not yet implemented. RenderUI is implemented, so it can be used as workaround.
   output$code <- renderUI({
-    codeOutput("code_out")
+    codeOutput("code_out") # from codeModules
   })
   
   output$inspect_render_1 <- mocked_validation_results[[1]]$inspect$render
@@ -243,22 +235,35 @@ server <- function(input, output, session) {
   })
 
   isModalOpen <- reactiveVal(FALSE)
+  
   output$reactModal <- renderReact({
     reactWidget(
-      Modal(isOpen=isModalOpen(), isBlocking=FALSE, className = "validation-details-modal",
-        div(style = "margin: 20px",
-          h1(style = "float: left; margin: 0 0 30px 0", textOutput("inspected_validation_title")),
+      Modal(
+        isOpen = isModalOpen(),
+        isBlocking = FALSE,
+        className = "validation-details-modal",
+        div(
+          style = "margin: 20px",
+          h1(style = "float: left; margin: 0 0 30px 0", 
+             textOutput("inspected_validation_title")),
           br(),
-          div(style = "position: relative",
-            div(style = "position: absolute; width: 100%; padding-top: 100px", Spinner(size = 3, label = "Loading, please wait...")),
+          div(
+            style = "position: relative",
+            div(style = "position: absolute; width: 100%; padding: 200px 0", 
+                Spinner(size = 3, label = "Loading, please wait...")),
             uiOutput("display_validation_result")
           ),
-          div(style = "float: right; margin-top: 50px", ShinyComponentWrapper(DefaultButton("hideModal", text="Close")))
+          div(style = "float: right; margin-top: 50px", ShinyComponentWrapper(
+            DefaultButton("hideModal", text = "Close")
+          ))
         )
       )
     )
   })
-  observeEvent(input$hideModal, { isModalOpen(FALSE) })
+  
+  observeEvent(input$hideModal, {
+    isModalOpen(FALSE)
+  })
 
 }
 
