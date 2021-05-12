@@ -12,6 +12,11 @@ source("viewers.R")
 
 # Run data validation
 # source("data_validation.R")
+# NOTE: Current version of data.validator report object needs refactoring to be more convenient
+#       to use here. For the purpose of the POC I am mocking the example result, to firstly 
+#       research how users like the shiny.fluent report app before I invest more time into that.
+source("mocked_validation_results.R")
+
 
 Card <- function(title, content) {
   div(class = "card ms-depth-8",
@@ -42,7 +47,7 @@ ValidationStatusRow <- function(id, text, success = TRUE, warning = FALSE) {
           text = text
         ),
         if (success) NULL else div(style = "float: right", DefaultButton(
-          paste0("inspect_", id),
+          paste0("open_viewer_button_", id),
           iconProps = list("iconName" = "Search"),
           text = "Inspect invalid data"
         ))
@@ -51,24 +56,16 @@ ValidationStatusRow <- function(id, text, success = TRUE, warning = FALSE) {
   )
 }
 
-
-mocked_validation_results <- list(
-  list(title = "No NA's inside mpg:carb columns", success = T, warning = F, inspect = table_view(mtcars)),
-  list(title = "am values equal 0 or 2 only", success = F, warning = F, inspect = table_view(mtcars, c('am'), c(1,2,3,18,19,20,26,27,28,29,30,31,32))),
-  list(title = "gear and carb values should equal 3 or 4", success = T, warning = F, inspect = table_view(mtcars)),
-  list(title = "Each row sum for am:vs columns is less or equal 2", success = T, warning = F, inspect = table_view(mtcars)),
-  list(title = "Each row sum for am:vs columns is less or equal 1", success = F, warning = T, inspect = table_view(mtcars, c('vs', 'am'), c(3,18,19,20,26,28,32))),
-  list(title = "For wt and qsec we have: abs(col) < 4 * sd(col)", success = T, warning = F, inspect = table_view(mtcars)),
-  list(title = "For wt and qsec we have: abs(col) < 2 * sd(col)", success = F, warning = F, inspect = table_view(mtcars, c('wt', 'qsec'), c(9,15,16,17))),
-  list(title = "Using mpg:carb mahalanobis distance for each observation is within 30 median absolute deviations from the median", success = T, warning = F, inspect = table_view(mtcars)),
-  list(title = "Using mpg:carb mahalanobis distance for each observation is within 3 median absolute deviations from the median", success = F, warning = F, inspect = table_view(mtcars, c('mpg', 'carb'), c(9,29))),
-  list(title = "Column drat has only positive values", success = T, warning = F, inspect = table_view(mtcars)),
-  list(title = "Column drat has only values larger than 3", success = F, warning = F, inspect = table_view(mtcars, c('drat'), c(6,15,16,22))),
-  list(title = "Sepal length is greater than 0", success = T, warning = F, inspect = table_view(iris)),
-  list(title = "Sepal width is between 0 and 4", success = F, warning = F, inspect = table_view(iris, c('Sepal.Width'), c(16,33,34))),
-  list(title = "Regions with 10.000+ cases are outliers", success = F, warning = T, inspect = custom_map_view())
-)
-
+ValidationStatusSection <- function(name, description, validations) {
+  Card(name,
+    tagList(
+      Text(variant = "medium", description),
+      lapply(validations, function(result) {
+        ValidationStatusRow(result$id, result$title, success = result$success, warning = result$warning)
+      })
+    )
+  )
+}
 
 layout <- function(body) {
   div(class = "grid-container",
@@ -94,7 +91,7 @@ report <- tagList(
       ), 
       span(style="float: right",
         TooltipHost(content = "Date when validation was performed", delay = 0, 
-                    tagList(FontIcon(iconName = "Clock"), Text(" 2021-04-17 21:47:11 CET ")))
+                    tagList(FontIcon(iconName = "Clock"), Text(" 2021-05-14 17:00:00 ET ")))
       )
   ),
   br(), br(),
@@ -114,33 +111,9 @@ report <- tagList(
       ShinyComponentWrapper(
         tagList(
           Separator(),
-          Card("mtcars",
-            tagList(
-              Text(variant = "medium", "Motor Trend Car Road Tests"),
-              lapply(1:11, function(id) {
-                result <- mocked_validation_results[[id]]
-                ValidationStatusRow(id, result$title, success = result$success, warning = result$warning)
-              })
-            )
-          ),
-          Card("iris",
-            tagList(
-              Text(variant = "medium", "Verifying flower dataset"),
-              lapply(12:13, function(id) {
-                result <- mocked_validation_results[[id]]
-                ValidationStatusRow(id, result$title, success = result$success, warning = result$warning)
-              })
-            )
-          ),
-          Card("population",
-            tagList(
-              Text(variant = "medium", "We can visualize validation in different ways. Below you can see example with a leaflet map. Also validation can be just a warning, to notify you about potential problems. It doesn't have to fail the whole report status."),
-              lapply(14:14, function(id) {
-                result <- mocked_validation_results[[id]]
-                ValidationStatusRow(id, result$title, success = result$success, warning = result$warning)
-              })
-            )
-          )
+          lapply(mocked_validation_results, function(result) {
+            ValidationStatusSection(result$name, result$description, result$validations)
+          })
         )
       )
     ),
@@ -180,55 +153,45 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-  # Set observers for inspect button click to open 
+  # Flatten results to one list
+  validation_results <- lapply(mocked_validation_results, function(x) x$validations) %>% do.call(c, .)
+  
+  # Set observers for button click to open 
   # validation viewer modal with appropriate validation
   inspected_validation <- reactiveVal(NULL)
-  lapply(
-    X = 1:14,
-    FUN = function(i) {
-      input_id <- paste0("inspect_", i)
+  lapply(validation_results, function(result) {
+      input_id <- paste0("open_viewer_button_", result$id)
       observeEvent(input[[input_id]], {
         isModalOpen(TRUE)
-        inspected_validation(i)
+        inspected_validation(result$id)
       })
     }
   )
+  
+  for (result in validation_results) {
+    output[[paste0("validation_viewer_", result$id)]] <- result$viewer$render
+  }
   
   output$code_out <- renderCode({ # from codeModules
     read_file("data_validation.R")
   })
   
-  # NOTE: renderUI used here is a hack
+  # NOTE: renderUI used below is a hack
   # We can't support some outputs in shiny.fluent, e.g. HTML() directly, 
   # because to add raw HTML in React you have to use __dangerouslySetInnerHTML__
   # which is not yet implemented. RenderUI is implemented, so it can be used as workaround.
   output$code <- renderUI({
     codeOutput("code_out") # from codeModules
   })
-  
-  output$inspect_render_1 <- mocked_validation_results[[1]]$inspect$render
-  output$inspect_render_2 <- mocked_validation_results[[2]]$inspect$render
-  output$inspect_render_3 <- mocked_validation_results[[3]]$inspect$render
-  output$inspect_render_4 <- mocked_validation_results[[4]]$inspect$render
-  output$inspect_render_5 <- mocked_validation_results[[5]]$inspect$render
-  output$inspect_render_6 <- mocked_validation_results[[6]]$inspect$render
-  output$inspect_render_7 <- mocked_validation_results[[7]]$inspect$render
-  output$inspect_render_8 <- mocked_validation_results[[8]]$inspect$render
-  output$inspect_render_9 <- mocked_validation_results[[9]]$inspect$render
-  output$inspect_render_10 <- mocked_validation_results[[10]]$inspect$render
-  output$inspect_render_11 <- mocked_validation_results[[11]]$inspect$render
-  output$inspect_render_12 <- mocked_validation_results[[12]]$inspect$render
-  output$inspect_render_13 <- mocked_validation_results[[13]]$inspect$render
-  output$inspect_render_14 <- mocked_validation_results[[14]]$inspect$render
 
   output$inspected_validation_title <- renderText({ 
-    mocked_validation_results[[inspected_validation()]]$title
+    validation_results[[inspected_validation()]]$title
   })
 
   output$display_validation_result <- renderUI({
     if (isModalOpen()) {
-      output_id <- paste0("inspect_render_", inspected_validation())
-      mocked_validation_results[[inspected_validation()]]$inspect$output(output_id)
+      output_id <- paste0("validation_viewer_", inspected_validation())
+      validation_results[[inspected_validation()]]$viewer$output(output_id)
     } else {
       ""
     }

@@ -7,7 +7,7 @@ validate(mtcars, description = "Motor Trend Car Road Tests") %>%
   validate_cols(not_na, mpg:carb, description = "No NA's inside mpg:carb columns") %>%
   validate_cols(in_set(c(0, 2)), am, description = "am values equal 0 or 2 only") %>%
   validate_rows(rowSums, within_bounds(0, 2), vs:am,
-  description = "Each row sum for am:vs columns is less or equal 2") %>%
+                description = "Each row sum for am:vs columns is less or equal 2") %>%
   validate_rows(rowSums, within_bounds(0, 1), vs:am,
                 description = "Each row sum for am:vs columns is less or equal 1") %>%
   validate_cols(within_n_sds(4), wt, qsec, description = "For wt and qsec we have: abs(col) < 4 * sd(col)") %>%
@@ -21,11 +21,6 @@ validate(mtcars, description = "Motor Trend Car Road Tests") %>%
   validate_if(drat > 0, description = "Column drat has only positive values") %>%
   validate_if(drat > 3, description = "Column drat has only values larger than 3") %>%
   add_results(report)
-
-report$get_validations()
-print(report$get_validations()[1,]$description)
-paste(report$get_validations()[1,]$error_df[[1]]$index, collapse = ",")
-
 
 # Custom predicate
 between <- function(a, b) {
@@ -45,10 +40,8 @@ population <- read.csv(
   colClasses = c("character", "character", "character", "integer", "integer", "integer")
 )
 
-validate(
-  population,
-  description = paste("Data.validator can visualize invalid data in differen ways.",
-                      "Below you can see example with a leaflet map")) %>%
+validate(population, description = paste("Data.validator can visualize invalid data in differen ways.",
+                                         "Below you can see example with a leaflet map")) %>%
     validate_cols(assertr::within_n_sds(3), total) %>%
     add_results(validator)
 
