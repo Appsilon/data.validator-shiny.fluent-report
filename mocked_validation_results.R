@@ -28,7 +28,7 @@ mocked_validation_results <- list(
     name = "population",
     description = "We can visualize validation in different ways. Below you can see example with a leaflet map.",
     validations = list(
-      list(id = 14, title = "Regions with 10.000+ cases are outliers", success = F, warning = F, viewer = custom_map_view())
+      list(id = 14, title = "Show warning for regions with more males than females in population", success = F, warning = T, viewer = custom_map_view(population, c(125,143,157,164,168,209,225,226,231,232,243,303,309,375)))
     )
   )
 )

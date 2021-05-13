@@ -13,8 +13,8 @@ source("viewers.R")
 # Run data validation
 # source("data_validation.R")
 # NOTE: Current version of data.validator report object needs refactoring to be more convenient
-#       to use here. For the purpose of the POC I am mocking the example result, to firstly 
-#       research how users like the shiny.fluent report app before I invest more time into that.
+#       to use here. For the purpose of the POC I am mocking the example result (using real validator output), 
+#       to firstly research how users like the shiny.fluent report app before I invest more time into that.
 source("mocked_validation_results.R")
 
 
@@ -210,8 +210,7 @@ server <- function(input, output, session) {
           h1(style = "float: left; margin: 0 0 30px 0", 
              textOutput("inspected_validation_title")),
           br(),
-          div(
-            style = "position: relative",
+          div(style = "position: relative",
             div(style = "position: absolute; width: 100%; padding: 200px 0", 
                 Spinner(size = 3, label = "Loading, please wait...")),
             uiOutput("display_validation_result")

@@ -35,10 +35,7 @@ validate(iris, name = "Verifying flower dataset") %>%
 
 # Example of custom visualization
 file <- system.file("extdata", "population.csv", package = "data.validator")
-population <- read.csv(
-  file,
-  colClasses = c("character", "character", "character", "integer", "integer", "integer")
-)
+population <- read.csv(file, colClasses = c("character", "character", "character", "integer", "integer", "integer"))
 
 validate(population, description = paste("Data.validator can visualize invalid data in differen ways.",
                                          "Below you can see example with a leaflet map")) %>%
