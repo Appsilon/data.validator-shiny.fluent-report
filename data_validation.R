@@ -35,11 +35,23 @@ validate(iris, name = "Verifying flower dataset") %>%
 
 # Example of custom visualization
 file <- system.file("extdata", "population.csv", package = "data.validator")
-population <- read.csv(file, colClasses = c("character", "character", "character", "integer", "integer", "integer"))
+population <- read.csv(file, 
+                       colClasses = c("character", "character", "character", "integer", "integer", "integer"))
+
+# Row reduction function to calculate male to female population ratio
+calculate_female_to_male_ratio <- function(data) {
+  data$females / data$males
+}
+
+# Define predicate
+expect_more_females_than_males <- function(ratio) {
+  ratio >= 1
+}
 
 validate(population, description = paste("Data.validator can visualize invalid data in differen ways.",
                                          "Below you can see example with a leaflet map")) %>%
-    validate_cols(assertr::within_n_sds(3), total) %>%
-    add_results(validator)
+  validate_rows(row_reduction_fn = calculate_female_to_male_ratio, expect_more_females_than_males, males, females,
+                description = "Show warning for regions with more males than females in population") %>%
+  add_results(report)
 
 save_report(report)
