@@ -1,3 +1,6 @@
+file <- system.file("extdata", "population.csv", package = "data.validator")
+population <- read.csv(file, colClasses = c("character", "character", "character", "integer", "integer", "integer"))
+
 mocked_validation_results <- list(
   list(
     name = "mtcars",
