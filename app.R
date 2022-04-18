@@ -30,23 +30,24 @@ Card <- function(title, content) {
 
 ValidationStatusRow <- function(id, text, success = TRUE, warning = FALSE) {
   config <- list(
-    success = list(class = "success", icon = "CheckMark"),
-    warning = list(class = "warning", icon = "Warning12"),
-    failure = list(class = "failure", icon = "Cancel")
+    success = list(class = "success", icon = "CheckMark", iconClass = "successIcon"),
+    warning = list(class = "warning", icon = "Warning12", iconClass = "warningIcon"),
+    failure = list(class = "failure", icon = "Cancel", iconClass = "failureIcon")
   )
   
   params <- if (success) config$success else if (warning) config$warning else config$failure
   
-  div(class = params$class,
+  div(className = params$class,
     tagList(
       Separator(),
       div(
         ActionButton(
           paste0("validation_", id), 
           iconProps = list("iconName" = params$icon), 
-          text = text
+          text = text,
+          className = params$iconClass
         ),
-        if (success) NULL else div(style = "float: right", DefaultButton(
+        if (success) NULL else div(style = "float: right", DefaultButton.shinyInput(
           paste0("open_viewer_button_", id),
           iconProps = list("iconName" = "Search"),
           text = "Inspect invalid data"
@@ -79,8 +80,8 @@ report <- tagList(
   shiny.info::display("Built for RStudio Shiny Contest 2021", position = "bottom right"),
   div(style = "margin: 20px 0", Text(variant = "xLarge", "Data Validation Report")),
   div(style = "margin: 20px 0",
-      span(style = "float: left; margin-right: 20px;",
-        PrimaryButton("report_status", iconProps = list("iconName" = "Cancel"), text = "Failed")
+      span(id = "report_status", style = "float: left; margin-right: 20px;",
+        PrimaryButton(iconProps = list("iconName" = "Cancel"), text = "Failed")
       ),
       span(style = "float: left; padding-top: 5px; margin-right: 5px", 
         Toggle("toggle", FALSE, 
@@ -108,21 +109,17 @@ report <- tagList(
   br(),
   Pivot(
     PivotItem(headerText = "Validation Results",
-      ShinyComponentWrapper(
-        tagList(
-          Separator(),
-          lapply(mocked_validation_results, function(result) {
-            ValidationStatusSection(result$name, result$description, result$validations)
-          })
-        )
+      tagList(
+        Separator(),
+        lapply(mocked_validation_results, function(result) {
+          ValidationStatusSection(result$name, result$description, result$validations)
+        })
       )
     ),
     PivotItem(headerText = "Code",
-      ShinyComponentWrapper(
-        tagList(
-          Separator(),
-          Card("Code used to validate the data and generate this report", uiOutput("code"))
-        )
+      tagList(
+        Separator(),
+        Card("Code used to validate the data and generate this report", uiOutput("code"))
       )
     )
   ),
@@ -143,10 +140,8 @@ ui <- fluidPage(
   shiny::tags$body(
     class = "ms-Fabric",
     dir="ltr",
-    withReact(
-      layout(
-        report
-      )
+    layout(
+      report
     )
   )
 )
@@ -200,24 +195,22 @@ server <- function(input, output, session) {
   isModalOpen <- reactiveVal(FALSE)
   
   output$reactModal <- renderReact({
-    reactWidget(
-      Modal(
-        isOpen = isModalOpen(),
-        isBlocking = FALSE,
-        className = "validation-details-modal",
-        div(
-          style = "margin: 20px",
-          h1(style = "float: left; margin: 0 0 30px 0", 
-             textOutput("inspected_validation_title")),
-          br(),
-          div(style = "position: relative",
-            div(style = "position: absolute; width: 100%; padding: 200px 0", 
-                Spinner(size = 3, label = "Loading, please wait...")),
-            uiOutput("display_validation_result")
-          ),
-          div(style = "float: right; margin-top: 50px", ShinyComponentWrapper(
-            DefaultButton("hideModal", text = "Close")
-          ))
+    Modal(
+      isOpen = isModalOpen(),
+      isBlocking = FALSE,
+      className = "validation-details-modal",
+      div(
+        style = "margin: 20px",
+        h1(style = "float: left; margin: 0 0 30px 0", 
+           textOutput("inspected_validation_title")),
+        br(),
+        div(style = "position: relative",
+          div(style = "position: absolute; width: 100%; padding: 200px 0", 
+              Spinner(size = 3, label = "Loading, please wait...")),
+          uiOutput("display_validation_result")
+        ),
+        div(style = "float: right; margin-top: 50px",
+          DefaultButton.shinyInput("hideModal", text = "Close")
         )
       )
     )

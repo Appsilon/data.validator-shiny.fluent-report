@@ -149,7 +149,7 @@
     },
     "curl": {
       "Package": "curl",
-      "Version": "4.0",
+      "Version": "4.3.2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "c39e9ce1ea015111772a1ac0aacfe981"
@@ -492,7 +492,7 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.10.0",
+      "Version": "0.15.4",
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "0d3f1c2b63e70b3d918246b4e2ca59b7"

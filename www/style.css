@@ -70,15 +70,15 @@ body {
   height: 700px;
 }
 
-.success .shiny-fluent-ActionButton .ms-Icon {
+.successIcon .ms-Icon {
   color: #0a0;
 }
 
-.failure .shiny-fluent-ActionButton .ms-Icon {
+.failureIcon .ms-Icon {
   color: #f00;
 }
 
-.warning .shiny-fluent-ActionButton .ms-Icon {
+.warningIcon .ms-Icon {
   color: #FF8C00;
 }
 
