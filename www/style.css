@@ -86,3 +86,19 @@ body {
   border: 1px solid #DC143C;
   background-color: #DC143C;
 }
+
+#about_section-show_about{
+  padding-bottom: 24px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+.card-header{
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between;
+}
