@@ -1,6 +1,15 @@
+html {
+  overflow:   scroll;
+}
+
 body {
   margin: 0;
   background: #fafafa;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
 }
 
 .grid-container {
@@ -101,4 +110,9 @@ body {
   padding: 5px 10px;
   display: flex;
   justify-content: space-between;
+}
+
+.about_card_headers:link{
+  text-decoration: none;
+  color: black;
 }

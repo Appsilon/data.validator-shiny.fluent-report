@@ -13,6 +13,7 @@ section_card <- function(
       tokens = list(childrenGap = 10),
       a(
         href = hyperlink,
+        class = "about_card_headers",
         span(
           class = "ms-fontWeight-regular ms-fontSize-20",
           title
