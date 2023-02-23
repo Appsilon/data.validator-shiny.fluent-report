@@ -170,9 +170,9 @@ about_server <- function(id) {
             topic_section(
               header = "About the project",
               description = "This R Shiny dashboard explores
-              The possibilities of the data.validation package
-              created by Appsilon. Which is usefull to validate
-              your dataset."
+              The various possibilities of the data.validation 
+              package created by Appsilon; which is useful to 
+              validate your dataset."
             ),
             topic_section(
               header = "Dataset Info",
