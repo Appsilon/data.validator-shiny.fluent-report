@@ -135,7 +135,8 @@ report <- tagList(
 ui <- fluidPage(
   suppressDependencies("bootstrap"),
   tags$head(
-    tags$link(href = "style.css", rel = "stylesheet", type = "text/css")
+    tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
+    tags$link(href = "about_section.css", rel = "stylesheet", type = "text/css")
   ),
   htmltools::htmlDependency(
     "office-ui-fabric-core",
