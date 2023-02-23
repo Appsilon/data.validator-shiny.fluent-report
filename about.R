@@ -169,13 +169,15 @@ about_server <- function(id) {
             class = "about-section",
             topic_section(
               header = "About the project",
-              description = "This R Shiny dashboard explores The possibilities 
-              of the data.validation package by Appsilon."
+              description = "This R Shiny dashboard explores
+              The possibilities of the data.validation package
+              created by Appsilon. Which is usefull to validate
+              your dataset."
             ),
             topic_section(
               header = "Dataset Info",
-              description = "The data used in the app are pretty basic datasets. like 
-              iris and mtcars."
+              description = "The data used in the app are
+              one of the very famous datasets; like iris and mtcars."
             ),
             hr(),
             div(
@@ -186,35 +188,38 @@ about_server <- function(id) {
               div(
                 class = "card-section",
                 card(
-                  href_link = "https://appsilon.github.io/shiny.fluent/index.html",
+                  href_link = "https://appsilon.github.io/shiny.fluent/",
                   img_link = create_image_path("shiny-fluent.png"),
                   card_header = "shiny.fluent",
-                  card_text = "We believe that a great UI plays a huge role in the success of
-                    application projects. Shiny.fluent gives your apps a beautiful,
-                    professional look, rich set of components easily usable in Shiny,
-                    and fast speed of development that Shiny is famous for. As Fluent UI is
-                    built in React, shiny.fluent is based on another package called
-                    shiny.react, which allows for using React libraries in Shiny."
+                  card_text = "We believe that a great UI plays a huge
+                  role in the success of application projects. Shiny.fluent
+                  gives your apps a beautiful, professional look, rich set
+                  of components easily usable in Shiny, and fast speed of
+                  development that Shiny is famous for. As Fluent UI is built
+                  in React, shiny.fluent is based on another package called
+                  shiny.react, which allows for using React libraries in Shiny."
                 ),
                 card(
                   href_link = "https://appsilon.github.io/shiny.react/",
                   img_link = create_image_path("shiny-react.png"),
                   card_header = "shiny.react",
-                  card_text = "Most of the shiny apps are build directly in Shiny
-                    without using any JS library. React being the Most popular one
-                    becomes one of such candidate.
-                    This R package enables using React in Shiny apps and is
-                    used e.g. by the shiny.fluent package. It contains R and JS
-                    code which is independent from the React library
-                    (e.g. Fluent UI) that is being wrapped."
+                  card_text = "Most of the shiny apps are build directly
+                  in Shiny without using any JS library. React being the
+                  Most popular one becomes one of such candidate.
+                  This R package enables using React in Shiny apps and is
+                  used e.g. by the shiny.fluent package. It contains R and JS
+                  code which is independent from the React library
+                  (e.g. Fluent UI) that is being wrapped."
                 ),
                 card(
                   href_link = "https://appsilon.github.io/data.validator/",
                   img_link = create_image_path("data-validator.png"),
                   card_header = "data.validator",
-                  card_text =   "Validate your data and create nice reports straight from R. data.validator
-                    is a package for scalable and reproducible data validation. It Create report object,
-                    prepare your dataset and validate your dataset along with genating HTML reports."
+                  card_text = "Validate your data and create nice reports
+                  straight from R. data.validator is a package for scalable
+                  and reproducible data validation. It Create report object,
+                  prepare your dataset and validate your dataset along with
+                  genating HTML reports."
                 )
               )
             ),
