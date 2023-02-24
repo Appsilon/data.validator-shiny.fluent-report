@@ -1,6 +1,15 @@
+html {
+  overflow:   scroll;
+}
+
 body {
   margin: 0;
   background: #fafafa;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
 }
 
 .grid-container {
@@ -85,4 +94,25 @@ body {
 #report_status .ms-Button {
   border: 1px solid #DC143C;
   background-color: #DC143C;
+}
+
+#about_section-show_about{
+  padding-bottom: 24px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+.card-header{
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.about_card_headers:link{
+  text-decoration: none;
+  color: black;
 }

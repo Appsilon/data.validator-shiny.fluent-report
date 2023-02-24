@@ -9,6 +9,7 @@ library(shiny.info)
 
 # Load functions responsible for different ways of displaying errors in data
 source("viewers.R")
+source("about.R")
 
 # Run data validation
 # source("data_validation.R")
@@ -78,7 +79,12 @@ layout <- function(body) {
 
 report <- tagList(
   shiny.info::display("Built for RStudio Shiny Contest 2021", position = "bottom right"),
-  div(style = "margin: 20px 0", Text(variant = "xLarge", "Data Validation Report")),
+  div(
+    class = "navbar",
+    style = "margin: 20px 0",
+    Text(variant = "xLarge", "Data Validation Report"),
+    about_ui("about_section")
+  ),
   div(style = "margin: 20px 0",
       span(id = "report_status", style = "float: left; margin-right: 20px;",
         PrimaryButton(iconProps = list("iconName" = "Cancel"), text = "Failed")
@@ -129,7 +135,8 @@ report <- tagList(
 ui <- fluidPage(
   suppressDependencies("bootstrap"),
   tags$head(
-    tags$link(href = "style.css", rel = "stylesheet", type = "text/css")
+    tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
+    tags$link(href = "about_section.css", rel = "stylesheet", type = "text/css")
   ),
   htmltools::htmlDependency(
     "office-ui-fabric-core",
@@ -147,7 +154,9 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-
+  
+  about_server("about_section")
+  
   # Flatten results to one list
   validation_results <- lapply(mocked_validation_results, function(x) x$validations) %>% do.call(c, .)
   
