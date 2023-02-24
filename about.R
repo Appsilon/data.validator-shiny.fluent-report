@@ -55,14 +55,12 @@ card <- function(href_link,
       class = "card-content",
       card_text
     ),
-    div(
+    a(
       class = "card-footer",
-      a(
-        href = href_link,
-        target = "_blank",
-        rel = "noopener noreferrer",
-        "Learn more"
-      )
+      href = href_link,
+      target = "_blank",
+      rel = "noopener noreferrer",
+      "Learn more"
     )
   )
 }
@@ -170,8 +168,8 @@ about_server <- function(id) {
             topic_section(
               header = "About the project",
               description = "This R Shiny dashboard explores
-              The various possibilities of the data.validation 
-              package created by Appsilon; which is useful to 
+              The various possibilities of the data.validation
+              package created by Appsilon; which is useful to
               validate your dataset."
             ),
             topic_section(

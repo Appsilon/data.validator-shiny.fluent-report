@@ -229,7 +229,12 @@ html {
   margin-top: auto;
 }
 
-.about-section .card-section .card-footer a:link {
+.card-footer:link {
+  text-decoration: none;
+  color: #050c31;
+}
+
+.card-footer:visited {
   text-decoration: none;
   color: #050c31;
 }
