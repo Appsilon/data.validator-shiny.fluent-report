@@ -6,10 +6,12 @@ library(data.validator)
 library(DT)
 library(codeModules)
 library(shiny.info)
+library(imola)
 
 # Load functions responsible for different ways of displaying errors in data
 source("viewers.R")
 source("about.R")
+source("navbar_section.R")
 
 # Run data validation
 # source("data_validation.R")
@@ -79,11 +81,10 @@ layout <- function(body) {
 
 report <- tagList(
   shiny.info::display("Built for RStudio Shiny Contest 2021", position = "bottom right"),
+
   div(
     class = "navbar",
-    style = "margin: 20px 0",
-    Text(variant = "xLarge", "Data Validation Report"),
-    about_ui("about_section")
+    navbar_ui("navbar_section")
   ),
   div(style = "margin: 20px 0",
       span(id = "report_status", style = "float: left; margin-right: 20px;",
@@ -136,7 +137,8 @@ ui <- fluidPage(
   suppressDependencies("bootstrap"),
   tags$head(
     tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
-    tags$link(href = "about_section.css", rel = "stylesheet", type = "text/css")
+    tags$link(href = "about_section.css", rel = "stylesheet", type = "text/css"),
+    tags$link(href = "navbar_section.min.css", rel = "stylesheet", type = "text/css")
   ),
   htmltools::htmlDependency(
     "office-ui-fabric-core",
@@ -155,7 +157,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   
-  about_server("about_section")
+  navbar_server("navbar_section")
   
   # Flatten results to one list
   validation_results <- lapply(mocked_validation_results, function(x) x$validations) %>% do.call(c, .)

@@ -1,0 +1,128 @@
+.navbar-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  & > i {
+    color: #0099F9;
+  }
+}
+
+#app_header {
+padding: 12px 0;
+justify-content: center;
+align-items: center;
+}
+
+.appsilon_logo {
+  height: 2.5rem;
+}
+
+.app_header_vertical_separator {
+  background: #C1C7CD;
+    margin: 10px 0;
+  height: calc(100% - 20px);
+}
+
+.app_header_title {
+  user-select: none;
+  color: #4D5358;
+    font-family: 'Maven Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.btn-cta {
+  color: #0099F9;
+    border: 2px solid #0099F9;
+  font-size: 1rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  justify-content: center;
+  background-color: white;
+  border-radius: 0.5rem;
+  transition: all 0.5s ease;
+}
+
+.btn-cta:hover {
+  color: white;
+  background-color: #0099F9;
+}
+
+.btn-nav_menu {
+  font-family: 'Maven Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  
+  background: transparent;
+  border: none;
+  
+  color: #697077;
+}
+.btn-nav_menu:hover, .btn-nav_menu:active {
+  color: #0099F9 !important;
+    background-color: #F2FAFF !important;
+}
+
+.cta-icon {
+  background: transparent !important;
+  border: none;
+  color: #0099f9 !important;
+    box-shadow: none;
+  font-size: 1.5rem;
+}
+
+.header_control {
+  display: none;
+  width: 20px;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .app_header_vertical_separator {
+    background: #C1C7CD;
+      margin: 10px 0;
+    height: 1px;
+  }
+  
+  .app_header.mobile-collapsed {
+    padding: 12px 24px 12px 0;
+  }
+  
+  .app_header_title {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    
+    color: #040A3C;
+  }
+  
+  .header_control {
+    display: block;
+    cursor: pointer;
+  }
+  
+  .btn-nav_menu {
+    text-align: left;
+  }
+  
+  #app_header.mobile-expanded .mobile-toggled,
+  #app_header.mobile-expanded .header_collapse {
+  display: flex !important;
+}
+#app_header.mobile-expanded .header_expand {
+display: none !important;
+}
+
+#app_header.mobile-collapsed .mobile-toggled,
+#app_header.mobile-collapsed .header_collapse {
+display: none !important;
+}
+#app_header.mobile-collapsed .header_expand {
+display: flex !important;
+}
+
+}

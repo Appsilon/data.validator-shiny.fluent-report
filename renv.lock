@@ -501,6 +501,21 @@
         "promises"
       ]
     },
+    "imola": {
+      "Package": "imola",
+      "Version": "0.5.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f0f71bb9ec08378a6e7950c68441cdde",
+      "Requirements": [
+        "glue",
+        "htmltools",
+        "magrittr",
+        "shiny",
+        "stringi",
+        "yaml"
+      ]
+    },
     "isoband": {
       "Package": "isoband",
       "Version": "0.2.7",
@@ -965,14 +980,9 @@
     "shiny.fluent": {
       "Package": "shiny.fluent",
       "Version": "0.3.0",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteUsername": "Appsilon",
-      "RemoteRepo": "shiny.fluent",
-      "RemoteRef": "master",
-      "RemoteSha": "46022f048c3fdab8c1fba0d98cb2905a4dd0b5a3",
-      "RemoteHost": "api.github.com",
-      "Hash": "76a472fee982b8937f6d2cd92cdc694a",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "588f81f264112d7c85f9b9e3c92ffc8d",
       "Requirements": [
         "htmltools",
         "jsonlite",
