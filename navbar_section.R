@@ -82,8 +82,9 @@ navbar_ui <- function(id) {
     separator = div(class = "app_header_vertical_separator mobile-toggled"),
     
     # Application title to be displayed
-    title = div("Racial Diversity in the USA 2010-2019",
-                class = "app_header_title mobile-toggled"
+    title = div(
+      "Data Validation Report",
+      class = "app_header_title mobile-toggled"
     ),
     
     # The call to action button
