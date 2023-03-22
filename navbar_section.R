@@ -3,14 +3,13 @@
 
 #' @export
 navbar_ui <- function(id) {
-  
   ns <- NS(id)
-  
+
   # A single header menu item
   nav_item <- function(input_id, label) {
     actionButton(input_id, label, class = "btn-nav_menu")
   }
-  
+
   # Use breakpoints based on the Appsilon design system
   appsilon_breakpoints <- breakpointSystem(
     "appsilon-breakpoints",
@@ -20,17 +19,17 @@ navbar_ui <- function(id) {
     breakpoint("l", min = 1024),
     breakpoint("xl", min = 1200)
   )
-  
+
   gridPanel(
     # Layout definition START
     id = "app_header",
-    
+
     # Used for mobile collapsed menu logic
     class = "mobile-collapsed",
-    
+
     # Panel breakpoint system
     breakpoint_system = appsilon_breakpoints,
-    
+
     # CSS grid areas of the panel.
     # Appsilon breakpoints are mobile first, so our default
     # is the mobile version of the panel
@@ -44,7 +43,7 @@ navbar_ui <- function(id) {
       ),
       l = "logo separator title mobile_controls . menu info cta"
     ),
-    
+
     # CSS grid columns of the panel.
     # Appsilon breakpoints are mobile first, so our default
     # is the mobile version of the panel
@@ -52,7 +51,7 @@ navbar_ui <- function(id) {
       default = "auto 1fr auto auto",
       l = "auto 1px auto auto 1fr auto auto auto"
     ),
-    
+
     # CSS grid rows of the panel.
     # Appsilon breakpoints are mobile first, so our default
     # is the mobile version of the panel
@@ -60,7 +59,7 @@ navbar_ui <- function(id) {
       default = "auto auto auto auto auto",
       l = "40px"
     ),
-    
+
     # CSS grid gap of the panel.
     # Appsilon breakpoints are mobile first, so our default
     # is the mobile version of the panel
@@ -69,54 +68,54 @@ navbar_ui <- function(id) {
       l = "16px"
     ),
     # Layout definition END
-    
+
     # Header Content START
     # Appsilon logo
     logo = img(
       class = "appsilon_logo",
       src = "img/appsilon-logo.png"
     ),
-    
+
     # Separator between logo and title.
     # On mobile it becomes the expanded separator
     separator = div(class = "app_header_vertical_separator mobile-toggled"),
-    
+
     # Application title to be displayed
     title = div(
       "Data Validation Report",
       class = "app_header_title mobile-toggled"
     ),
-    
+
     # The call to action button
-    cta = actionButton("cta_talk", "Let's Talk",
-                       class = "btn-primary btn-cta mobile-toggled",
-                       onclick = "window.open('https://appsilon.com/', '_blank')"
+    cta = actionButton(
+      "cta_talk",
+      "Let's Talk",
+      class = "btn-primary btn-cta mobile-toggled",
+      onclick = "window.open('https://appsilon.com/#contact', '_blank')"
     ),
-    
+
     # The info icon
     info = div(
       id = "cta_info",
       class = "cta-icon",
       about_ui(ns("about_section"))
     ),
-    
+
     # The navigation
     menu = flexPanel(
       breakpoint_system = appsilon_breakpoints,
       class = "mobile-toggled",
-      
       direction = list(
         default = "column",
         l = "row"
       ),
-      
       nav_item(
         "menu_item_one",
         div("")
       )
     ),
     # Header Content END
-    
+
     # Mobile controls START
     mobile_controls = div(
       # Collapse/Expand functionality for mobile
@@ -138,14 +137,14 @@ navbar_ui <- function(id) {
             .remove('mobile-expanded');
         }
       "),
-      
+
       # Hamburger icon. Used on mobile to expand the header bar
       icon(
         "bars",
         class = "header_control header_expand cta-icon",
         onclick = "header_expand();"
       ),
-      
+
       # Hamburger icon. Used on mobile to collapse the header bar
       icon(
         "times",
