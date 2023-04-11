@@ -138,7 +138,14 @@ ui <- fluidPage(
   tags$head(
     tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
     tags$link(href = "about_section.css", rel = "stylesheet", type = "text/css"),
-    tags$link(href = "navbar_section.min.css", rel = "stylesheet", type = "text/css")
+    tags$link(href = "navbar_section.min.css", rel = "stylesheet", type = "text/css"),
+    tags$script(
+        src = "https://www.googletagmanager.com/gtag/js?id=G-FQQZL5V93G",
+        async = ""
+    ),
+    includeScript(
+      path = "www/gtag.js"
+    )
   ),
   htmltools::htmlDependency(
     "office-ui-fabric-core",
