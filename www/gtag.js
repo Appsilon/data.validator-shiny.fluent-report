@@ -8,6 +8,8 @@ $(() => {
   gtag('js', new Date());
   gtag('config', 'G-FQQZL5V93G');
 
+  gtag('event', 'tab-open',{ tabname: 'main tab'});
+
   /* About Button */
   $('#navbar_section-about_section-open_modal').on('click', (event) => {
     gtag('event', 'about_button_clicked');
@@ -25,12 +27,12 @@ $(() => {
 
   /* Code Tab */
   $('#Pivot5-Tab1').on('click', (event) => {
-    gtag('event', 'code tab opened');
+    gtag('event', 'tab-open',{ tabname: 'code tab'});
   });
 
   /* main Tab */
   $('#Pivot5-Tab0').on('click', (event) => {
-    gtag('event', 'main tab opened');
+    gtag('event', 'tab-open',{ tabname: 'main tab'});
   });
 
 });
